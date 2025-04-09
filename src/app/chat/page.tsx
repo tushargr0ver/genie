@@ -7,9 +7,7 @@ import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
-  Switch,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -30,22 +28,21 @@ import {
   Bot,
   Menu,
   LogOut,
-  Settings,
   PlusCircle,
   MessageSquare,
-  ImageIcon,
-  type File,
   X,
   Search,
   BrainCircuit,
-  Github,
-  Linkedin,
   AlertCircle,
   Info,
+  PaperclipIcon,
+  SunIcon,
+  MoonIcon,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
+import { useTheme } from "next-themes"
 
 // Define the available AI models
 const AI_MODELS = [
@@ -67,6 +64,7 @@ const AI_MODELS = [
 
 export default function ChatPage() {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id)
   const [conversations, setConversations] = useState([{ id: "default", name: "New conversation", messages: [] }])
   const [activeConversation, setActiveConversation] = useState("default")
@@ -75,16 +73,20 @@ export default function ChatPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [mediaFiles, setMediaFiles] = useState<File[]>([])
   const [mediaPreviewUrls, setMediaPreviewUrls] = useState<string[]>([])
+  // Change the reasoning/search mode state and UI
+  // Replace the isSearchMode state with separate states for each mode
+  const [isReasoningMode, setIsReasoningMode] = useState(false)
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [credits, setCredits] = useState(10)
   const [showLimitDialog, setShowLimitDialog] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
 
   // Initialize chat with AI SDK
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
     body: {
       model: selectedModel,
+      isReasoningMode,
       isSearchMode,
     },
     onFinish: () => {
@@ -185,6 +187,11 @@ export default function ChatPage() {
     setMediaPreviewUrls([])
   }
 
+  // Toggle theme
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
+
   // Boost credits
   const boostCredits = () => {
     setCredits((prev) => prev + 5)
@@ -192,10 +199,10 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
       <div
-        className={`bg-gray-900 text-white w-full max-w-[280px] flex-shrink-0 flex flex-col 
+        className={`bg-gray-900 dark:bg-gray-950 text-white w-full max-w-[280px] flex-shrink-0 flex flex-col 
                    ${isMobileMenuOpen ? "fixed inset-y-0 left-0 z-50" : "hidden md:flex"}`}
       >
         <div className="p-4 border-b border-gray-800 flex items-center space-x-2">
@@ -238,10 +245,10 @@ export default function ChatPage() {
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="bg-gray-800 p-3 rounded-lg">
+          <div className="bg-gray-800 dark:bg-gray-800 p-3 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-gray-400">Credits Remaining</span>
-              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/10</Badge>
+              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/10}</Badge>
             </div>
             <Progress value={credits * 10} className="h-2" />
             <div className="mt-2 text-xs text-gray-400 text-center">
@@ -251,46 +258,24 @@ export default function ChatPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <Link href="/contact">
-                <Button variant="outline" size="sm" className="w-full text-gray-300 border-gray-700">
-                  Contact Us
-                </Button>
-              </Link>
-              <Link href="/rewards">
-                <Button variant="outline" size="sm" className="w-full text-gray-300 border-gray-700">
-                  Rewards
-                </Button>
-              </Link>
-            </div>
+          <div className="border-t border-gray-800 pt-4 flex items-center justify-between">
+            <Button variant="ghost" size="sm" className="text-gray-400" onClick={toggleTheme}>
+              {theme === "dark" ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
+              <span className="ml-2">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+            </Button>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start text-gray-300">
-                <User className="mr-2 h-4 w-4" />
-                <span>John Doe</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => router.push("/settings")}>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button variant="ghost" className="w-full justify-start text-gray-300" onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Log out</span>
+          </Button>
         </div>
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Mobile header */}
-        <header className="bg-white border-b p-3 flex items-center justify-between md:hidden">
+        <header className="bg-white dark:bg-gray-800 border-b dark:border-gray-700 p-3 flex items-center justify-between md:hidden">
           <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <Menu className="h-6 w-6" />
           </Button>
@@ -298,28 +283,33 @@ export default function ChatPage() {
             <Zap className="h-5 w-5 text-purple-600" />
             <span className="font-bold">Genie</span>
           </div>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => router.push("/rewards")}>
-                  <Badge className="px-1.5 py-0.5 absolute -top-1 -right-1 text-xs">{credits}</Badge>
-                  <Zap className="h-5 w-5 text-yellow-500" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Credits remaining: {credits}/10</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="flex items-center space-x-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={() => router.push("/rewards")}>
+                    <Badge className="px-1.5 py-0.5 absolute -top-1 -right-1 text-xs">{credits}</Badge>
+                    <Zap className="h-5 w-5 text-yellow-500" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Credits remaining: {credits}/10</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Button variant="ghost" size="icon" onClick={toggleTheme}>
+              {theme === "dark" ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+            </Button>
+          </div>
         </header>
 
-        {/* Model selector and mode toggle */}
-        <div className="bg-white border-b p-3 flex flex-col sm:flex-row gap-3 items-center">
+        {/* Model selector */}
+        <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700 p-3 flex flex-col sm:flex-row gap-3 items-center">
           <Select value={selectedModel} onValueChange={handleModelChange}>
-            <SelectTrigger className="w-full sm:w-[250px]">
+            <SelectTrigger className="w-full sm:w-[250px] dark:bg-gray-700 dark:border-gray-600">
               <SelectValue placeholder="Select a model" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-gray-700">
               {AI_MODELS.map((model) => (
                 <SelectItem key={model.id} value={model.id}>
                   {model.name} ({model.provider})
@@ -329,21 +319,11 @@ export default function ChatPage() {
           </Select>
 
           <div className="flex items-center space-x-4 ml-auto">
-            <div className="flex items-center space-x-2">
-              <span className={`text-sm ${isSearchMode ? "text-gray-500" : "text-purple-600 font-medium"}`}>
-                Reasoning
-              </span>
-              <Switch checked={isSearchMode} onCheckedChange={setIsSearchMode} />
-              <span className={`text-sm ${isSearchMode ? "text-purple-600 font-medium" : "text-gray-500"}`}>
-                Search
-              </span>
-            </div>
-
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <Info className="h-4 w-4 text-gray-500" />
+                    <Info className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -359,14 +339,14 @@ export default function ChatPage() {
         </div>
 
         {/* Chat messages */}
-        <div className="flex-1 overflow-y-auto p-3 bg-white">
+        <div className="flex-1 overflow-y-auto p-3 bg-white dark:bg-gray-800">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-4 sm:p-8">
-              <div className="bg-purple-100 p-3 rounded-full mb-4">
-                <Zap className="h-8 w-8 text-purple-600" />
+              <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-full mb-4">
+                <Zap className="h-8 w-8 text-purple-600 dark:text-purple-400" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-2">How can I help you today?</h2>
-              <p className="text-gray-500 max-w-md mb-6 sm:mb-8 text-sm sm:text-base">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2 dark:text-white">How can I help you today?</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-md mb-6 sm:mb-8 text-sm sm:text-base">
                 Ask me anything! I can answer questions, write content, generate ideas, and more.
               </p>
               <div className="grid grid-cols-1 gap-3 w-full max-w-md">
@@ -379,7 +359,7 @@ export default function ChatPage() {
                   <Button
                     key={i}
                     variant="outline"
-                    className="justify-start h-auto py-2 px-3 text-left text-sm"
+                    className="justify-start h-auto py-2 px-3 text-left text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                     onClick={() => handleInputChange({ target: { value: suggestion } } as any)}
                   >
                     {suggestion}
@@ -387,23 +367,22 @@ export default function ChatPage() {
                 ))}
               </div>
 
-              <div className="mt-8 flex items-center space-x-2 text-sm text-gray-500">
-                {isSearchMode ? (
-                  <>
-                    <Search className="h-4 w-4" />
-                    <span>Search mode is active. I'll search the web for answers.</span>
-                  </>
-                ) : (
-                  <>
-                    <BrainCircuit className="h-4 w-4" />
-                    <span>Reasoning mode is active. I'll use my knowledge to answer.</span>
-                  </>
-                )}
+              {/* Update the welcome screen mode indicator */}
+              <div className="mt-8 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className={`flex items-center ${isReasoningMode ? "text-purple-600 dark:text-purple-400" : ""}`}>
+                  <BrainCircuit className="h-4 w-4 mr-1" />
+                  <span>Reasoning: {isReasoningMode ? "On" : "Off"}</span>
+                </div>
+                <div className={`flex items-center ${isSearchMode ? "text-purple-600 dark:text-purple-400" : ""}`}>
+                  <Search className="h-4 w-4 mr-1" />
+                  <span>Search: {isSearchMode ? "On" : "Off"}</span>
+                </div>
               </div>
             </div>
           ) : (
             <div className="space-y-4 max-w-3xl mx-auto">
               {messages.map((message, i) => (
+                // Improve chat message formatting and add copy button
                 <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     className={`
@@ -414,35 +393,66 @@ export default function ChatPage() {
                     <div
                       className={`
                       flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center
-                      ${message.role === "user" ? "bg-purple-100 ml-2" : "bg-gray-100 mr-2"}
+                      ${
+                        message.role === "user"
+                          ? "bg-purple-100 dark:bg-purple-900 ml-2"
+                          : "bg-gray-100 dark:bg-gray-700 mr-2"
+                      }
                     `}
                     >
                       {message.role === "user" ? (
-                        <User className="h-4 w-4 text-purple-600" />
+                        <User className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       ) : (
-                        <Bot className="h-4 w-4 text-gray-600" />
+                        <Bot className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                       )}
                     </div>
-                    <div>
+                    <div className="group relative">
                       <div
                         className={`
                         p-3 rounded-lg 
                         ${
                           message.role === "user"
                             ? "bg-purple-600 text-white rounded-br-none"
-                            : "bg-gray-100 text-gray-800 rounded-bl-none"
+                            : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none"
                         }
                       `}
                       >
-                        {message.content}
+                        <div className="whitespace-pre-wrap">{message.content}</div>
                       </div>
                       <div
                         className={`
-                        text-xs text-gray-500 mt-1
-                        ${message.role === "user" ? "text-right" : "text-left"}
+                        text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center
+                        ${message.role === "user" ? "justify-end" : "justify-start"}
                       `}
                       >
-                        {formatTime()}
+                        <span>{formatTime()}</span>
+                        {message.role === "assistant" && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              navigator.clipboard.writeText(message.content)
+                              // You could add a toast notification here
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="text-gray-500 dark:text-gray-400"
+                            >
+                              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                            </svg>
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -454,13 +464,13 @@ export default function ChatPage() {
         </div>
 
         {/* Input area */}
-        <div className="border-t bg-white p-3">
+        <div className="border-t dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
           {/* Media preview */}
           {mediaPreviewUrls.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-3 max-w-3xl mx-auto">
               {mediaPreviewUrls.map((url, index) => (
                 <div key={index} className="relative">
-                  <div className="h-16 w-16 rounded-md overflow-hidden border border-gray-200">
+                  <div className="h-16 w-16 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
                     <Image
                       src={url || "/placeholder.svg"}
                       alt="Media preview"
@@ -480,6 +490,38 @@ export default function ChatPage() {
             </div>
           )}
 
+          {/* Mode selector buttons */}
+          <div className="flex justify-center mb-3">
+            <div className="flex space-x-2" role="group">
+              <Button
+                variant={isReasoningMode ? "default" : "outline"}
+                size="sm"
+                className={`${
+                  isReasoningMode
+                    ? "bg-purple-600 hover:bg-purple-700 text-white"
+                    : "dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
+                }`}
+                onClick={() => setIsReasoningMode(!isReasoningMode)}
+              >
+                <BrainCircuit className="h-4 w-4 mr-2" />
+                Reasoning {isReasoningMode ? "On" : "Off"}
+              </Button>
+              <Button
+                variant={isSearchMode ? "default" : "outline"}
+                size="sm"
+                className={`${
+                  isSearchMode
+                    ? "bg-purple-600 hover:bg-purple-700 text-white"
+                    : "dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
+                }`}
+                onClick={() => setIsSearchMode(!isSearchMode)}
+              >
+                <Search className="h-4 w-4 mr-2" />
+                Search {isSearchMode ? "On" : "Off"}
+              </Button>
+            </div>
+          </div>
+
           <form onSubmit={handleFormSubmit} className="flex flex-col gap-2 max-w-3xl mx-auto">
             <div className="flex items-end gap-2">
               <div className="flex-1 relative">
@@ -487,7 +529,7 @@ export default function ChatPage() {
                   value={input}
                   onChange={handleInputChange}
                   placeholder="Type your message..."
-                  className="resize-none min-h-[50px] pr-12 py-3 text-sm"
+                  className="resize-none min-h-[50px] pr-12 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
                   rows={1}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
@@ -498,38 +540,45 @@ export default function ChatPage() {
                     }
                   }}
                 />
+                {/* Add stop button to the input area */}
                 <div className="absolute right-2 bottom-2 flex space-x-1">
                   <Button
                     type="button"
                     size="icon"
                     variant="ghost"
-                    className="h-8 w-8 text-gray-500 hover:text-purple-600"
+                    className="h-8 w-8 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isLoading || isUploading}
                   >
-                    <ImageIcon className="h-4 w-4" />
+                    <PaperclipIcon className="h-4 w-4" />
                   </Button>
-                  <Button
-                    type="submit"
-                    size="icon"
-                    disabled={isLoading || (!input.trim() && mediaFiles.length === 0) || credits <= 0}
-                    className="h-8 w-8 bg-purple-600 hover:bg-purple-700"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  {isLoading ? (
+                    <Button type="button" size="icon" onClick={stop} className="h-8 w-8 bg-red-600 hover:bg-red-700">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      size="icon"
+                      disabled={(!input.trim() && mediaFiles.length === 0) || credits <= 0}
+                      className="h-8 w-8 bg-purple-600 hover:bg-purple-700"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
                 <input
                   type="file"
                   ref={fileInputRef}
                   className="hidden"
-                  accept="image/*"
+                  accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
                   onChange={handleFileSelect}
                   multiple
                 />
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-xs text-gray-500">
+            <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
               <div>Genie may produce inaccurate information.</div>
               <div className="flex items-center">
                 <Zap className="h-3 w-3 mr-1 text-yellow-500" />
@@ -542,30 +591,59 @@ export default function ChatPage() {
 
       {/* Credit limit dialog */}
       <Dialog open={showLimitDialog} onOpenChange={setShowLimitDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-gray-800 dark:text-white">
           <DialogHeader>
             <DialogTitle className="flex items-center">
               <AlertCircle className="h-5 w-5 text-yellow-500 mr-2" />
               You've reached your credit limit
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="dark:text-gray-400">
               You've used all your available credits. Follow us on social media to get more credits.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-medium mb-2">Get 5 more credits by following:</h3>
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <h3 className="font-medium mb-2 dark:text-gray-200">Get 5 more credits by following:</h3>
               <div className="grid grid-cols-2 gap-3">
                 <Link href="/rewards?action=github" onClick={boostCredits}>
-                  <Button variant="outline" className="w-full">
-                    <Github className="mr-2 h-4 w-4" />
+                  <Button variant="outline" className="w-full dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500">
+                    <svg
+                      className="mr-2 h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                      <path d="M9 18c-4.51 2-5-2-7-2" />
+                    </svg>
                     GitHub
                   </Button>
                 </Link>
                 <Link href="/rewards?action=linkedin" onClick={boostCredits}>
-                  <Button variant="outline" className="w-full">
-                    <Linkedin className="mr-2 h-4 w-4" />
+                  <Button variant="outline" className="w-full dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500">
+                    <svg
+                      className="mr-2 h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect width="4" height="12" x="2" y="9" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
                     LinkedIn
                   </Button>
                 </Link>
@@ -583,4 +661,3 @@ export default function ChatPage() {
     </div>
   )
 }
-

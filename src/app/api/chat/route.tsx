@@ -4,19 +4,26 @@ import { streamText } from "ai"
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
 
+// Update the API route to handle both reasoning and search modes
 export async function POST(req: Request) {
-  const { messages, model = "gpt-4o", isSearchMode = false } = await req.json()
+  const { messages, model = "gpt-4o", isReasoningMode = false, isSearchMode = false } = await req.json()
 
   // Configure the model based on the selected provider
   let aiModel
   let systemPrompt = "You are Genie, a helpful AI assistant."
 
-  // Add search mode context to system prompt if enabled
-  if (isSearchMode) {
+  // Add mode context to system prompt
+  if (isReasoningMode && isSearchMode) {
+    systemPrompt +=
+      " You have access to search the web for the most up-to-date information and will use your reasoning capabilities to analyze complex problems. Combine search results with your reasoning to provide comprehensive answers."
+  } else if (isSearchMode) {
     systemPrompt +=
       " You have access to search the web for the most up-to-date information. When answering, make sure to search for relevant information first."
+  } else if (isReasoningMode) {
+    systemPrompt +=
+      " You will use your reasoning capabilities to analyze complex problems and provide step-by-step explanations."
   } else {
-    systemPrompt += " You will use your knowledge to answer questions without searching the web."
+    systemPrompt += " You will provide concise and helpful responses based on your knowledge."
   }
 
   // Select the appropriate model based on the provider
@@ -46,4 +53,3 @@ export async function POST(req: Request) {
 
   return result.toDataStreamResponse()
 }
-

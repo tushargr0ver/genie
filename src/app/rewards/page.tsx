@@ -5,15 +5,19 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Zap, Github, Linkedin, ArrowLeft, Check } from "lucide-react"
+import { Zap, Github, Linkedin, ArrowLeft, Check, Twitter, Share2 } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
 
 export default function RewardsPage() {
   const [credits, setCredits] = useState(10)
   const [githubFollowed, setGithubFollowed] = useState(false)
   const [linkedinFollowed, setLinkedinFollowed] = useState(false)
+  const [twitterFollowed, setTwitterFollowed] = useState(false)
+  const [shared, setShared] = useState(false)
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { theme } = useTheme()
 
   useEffect(() => {
     // Check if user came from a specific action
@@ -24,8 +28,14 @@ export default function RewardsPage() {
     } else if (action === "linkedin" && !linkedinFollowed) {
       setLinkedinFollowed(true)
       setCredits((prev) => prev + 5)
+    } else if (action === "twitter" && !twitterFollowed) {
+      setTwitterFollowed(true)
+      setCredits((prev) => prev + 5)
+    } else if (action === "share" && !shared) {
+      setShared(true)
+      setCredits((prev) => prev + 3)
     }
-  }, [searchParams, githubFollowed, linkedinFollowed])
+  }, [searchParams, githubFollowed, linkedinFollowed, twitterFollowed, shared])
 
   const handleGithubFollow = () => {
     window.open("https://github.com/yourusername", "_blank")
@@ -43,32 +53,54 @@ export default function RewardsPage() {
     }
   }
 
+  const handleTwitterFollow = () => {
+    window.open("https://twitter.com/yourhandle", "_blank")
+    if (!twitterFollowed) {
+      setTwitterFollowed(true)
+      setCredits((prev) => prev + 5)
+    }
+  }
+
+  const handleShare = () => {
+    // Share functionality - in a real app, this would open a share dialog
+    if (navigator.share) {
+      navigator.share({
+        title: "Genie AI Chat",
+        text: "Check out this amazing AI chat app!",
+        url: window.location.origin,
+      })
+    }
+
+    if (!shared) {
+      setShared(true)
+      setCredits((prev) => prev + 3)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
       <div className="max-w-md mx-auto">
-        <div className="mb-6">
-          <Button variant="ghost" className="mb-4" onClick={() => router.push("/chat")}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Chat
-          </Button>
+        <Button variant="ghost" className="mb-4 dark:text-gray-300" onClick={() => router.push("/chat")}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Chat
+        </Button>
 
-          <div className="flex items-center space-x-2 mb-2">
-            <Zap className="h-6 w-6 text-purple-600" />
-            <h1 className="text-2xl font-bold">Genie Rewards</h1>
-          </div>
-          <p className="text-gray-600 text-sm">
-            Earn more credits by following us on social media and sharing Genie with your friends.
-          </p>
+        <div className="flex items-center space-x-2 mb-2">
+          <Zap className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          <h1 className="text-2xl font-bold dark:text-white">Genie Rewards</h1>
         </div>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Earn more credits by following us on social media and sharing Genie with your friends.
+        </p>
 
-        <Card className="mb-6">
+        <Card className="mb-6 mt-6 dark:bg-gray-800 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="text-lg">Your Credits</CardTitle>
-            <CardDescription>Use credits to chat with AI models</CardDescription>
+            <CardTitle className="text-lg dark:text-white">Your Credits</CardTitle>
+            <CardDescription className="dark:text-gray-400">Use credits to chat with AI models</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-500">Available Credits</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Available Credits</span>
               <Badge variant={credits > 5 ? "default" : "outline"} className="bg-purple-600">
                 {credits} credits
               </Badge>
@@ -78,15 +110,15 @@ export default function RewardsPage() {
         </Card>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-medium">Earn More Credits</h2>
+          <h2 className="text-lg font-medium dark:text-white">Earn More Credits</h2>
 
-          <Card>
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Follow on GitHub</CardTitle>
-              <CardDescription>Get 5 credits</CardDescription>
+              <CardTitle className="text-base dark:text-white">Follow on GitHub</CardTitle>
+              <CardDescription className="dark:text-gray-400">Get 5 credits</CardDescription>
             </CardHeader>
             <CardContent className="pb-2">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Follow our GitHub repository to stay updated with the latest features and improvements.
               </p>
             </CardContent>
@@ -111,13 +143,13 @@ export default function RewardsPage() {
             </CardFooter>
           </Card>
 
-          <Card>
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Connect on LinkedIn</CardTitle>
-              <CardDescription>Get 5 credits</CardDescription>
+              <CardTitle className="text-base dark:text-white">Connect on LinkedIn</CardTitle>
+              <CardDescription className="dark:text-gray-400">Get 5 credits</CardDescription>
             </CardHeader>
             <CardContent className="pb-2">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Connect with us on LinkedIn to network and learn about AI advancements.
               </p>
             </CardContent>
@@ -141,9 +173,70 @@ export default function RewardsPage() {
               </Button>
             </CardFooter>
           </Card>
+
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base dark:text-white">Follow on X (Twitter)</CardTitle>
+              <CardDescription className="dark:text-gray-400">Get 5 credits</CardDescription>
+            </CardHeader>
+            <CardContent className="pb-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Follow us on X to get the latest updates and AI news.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handleTwitterFollow}
+                className={`w-full ${twitterFollowed ? "bg-green-600 hover:bg-green-700" : "bg-purple-600 hover:bg-purple-700"}`}
+                disabled={twitterFollowed}
+              >
+                {twitterFollowed ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Followed
+                  </>
+                ) : (
+                  <>
+                    <Twitter className="mr-2 h-4 w-4" />
+                    Follow on X
+                  </>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base dark:text-white">Share with Friends</CardTitle>
+              <CardDescription className="dark:text-gray-400">Get 3 credits</CardDescription>
+            </CardHeader>
+            <CardContent className="pb-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Share Genie with your friends and colleagues to help them discover AI.
+              </p>
+            </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handleShare}
+                className={`w-full ${shared ? "bg-green-600 hover:bg-green-700" : "bg-purple-600 hover:bg-purple-700"}`}
+                disabled={shared}
+              >
+                {shared ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Shared
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Share Genie
+                  </>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </div>
   )
 }
-

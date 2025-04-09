@@ -6,9 +6,13 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Zap, Github, Loader2 } from "lucide-react"
+// Add dark mode toggle to signup page
+import { useTheme } from "next-themes"
+import { SunIcon, MoonIcon } from "lucide-react"
 
 export default function SignupPage() {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const [isLoading, setIsLoading] = useState({
     google: false,
     github: false,
@@ -35,16 +39,24 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
           <Link href="/" className="inline-flex items-center space-x-2">
             <Zap className="h-6 w-6 text-purple-600" />
-            <span className="text-2xl font-bold text-gray-900">Genie</span>
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">Genie</span>
           </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-0 text-gray-500 dark:text-gray-400"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+          </Button>
         </div>
 
-        <Card>
+        <Card className="dark:bg-gray-800 dark:border-gray-700">
           <CardHeader>
             <CardTitle className="text-xl text-center">Create an account</CardTitle>
             <CardDescription className="text-center">Sign up to start chatting with AI models</CardDescription>
@@ -129,4 +141,3 @@ export default function SignupPage() {
     </div>
   )
 }
-
