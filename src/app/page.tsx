@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import { getSession } from 'next-auth/react';
+
 import { Button } from "@/components/ui/button"
 import {
   ArrowRight,
@@ -21,8 +23,22 @@ import {
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/navigation"
 
 export default function LandingPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+      const checkSession = async () => {
+        const session = await getSession();
+        if (session) {
+          router.push('/chat');
+        }        
+      };
+  
+      checkSession();
+    }, [router]);
+
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 

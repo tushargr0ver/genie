@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import Link from "next/link"
+import { getSession } from 'next-auth/react';
+
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,9 +11,22 @@ import { Zap, Github, Loader2 } from "lucide-react"
 // Add dark mode toggle to signup page
 import { useTheme } from "next-themes"
 import { SunIcon, MoonIcon } from "lucide-react"
+import { signIn } from "next-auth/react" // ✅ Use next-auth signIn
 
 export default function SignupPage() {
   const router = useRouter()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session) {
+        router.push('/chat');
+      }        
+    };
+
+    checkSession();
+  }, [router]);
+
   const { theme, setTheme } = useTheme()
   const [isLoading, setIsLoading] = useState({
     google: false,
@@ -22,20 +37,25 @@ export default function SignupPage() {
     setIsLoading((prev) => ({ ...prev, google: true }))
 
     // Simulate OAuth signup
-    setTimeout(() => {
-      setIsLoading((prev) => ({ ...prev, google: false }))
-      router.push("/chat")
-    }, 1500)
+    // setTimeout(() => {
+    //   setIsLoading((prev) => ({ ...prev, google: false }))
+    //   router.push("/chat")
+    // }, 1500)
+
+    await signIn("google", { callbackUrl: "/chat" })
   }
 
   const handleGithubSignup = async () => {
     setIsLoading((prev) => ({ ...prev, github: true }))
 
     // Simulate OAuth signup
-    setTimeout(() => {
-      setIsLoading((prev) => ({ ...prev, github: false }))
-      router.push("/chat")
-    }, 1500)
+    // setTimeout(() => {
+    //   setIsLoading((prev) => ({ ...prev, github: false }))
+    //   router.push("/chat")
+    // }, 1500)
+
+    await signIn("github", { callbackUrl: "/chat" })
+
   }
 
   return (

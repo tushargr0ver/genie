@@ -1,6 +1,8 @@
 "use client"
 
 import type React from "react"
+import { getSession } from 'next-auth/react';
+import { signOut } from "next-auth/react" // ✅ Use next-auth signIn
 
 import { useState, useRef, useEffect } from "react"
 import { useChat } from "ai/react"
@@ -64,6 +66,21 @@ const AI_MODELS = [
 
 export default function ChatPage() {
   const router = useRouter()
+
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (!session) {
+        router.push('/');
+      }
+      console.log(session);
+      
+    };
+
+    checkSession();
+  }, [router]);
+
   const { theme, setTheme } = useTheme()
   const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id)
   const [conversations, setConversations] = useState([{ id: "default", name: "New conversation", messages: [] }])
@@ -120,7 +137,9 @@ export default function ChatPage() {
   }
 
   // Handle logout
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    await signOut({ redirect: false })
+    
     router.push("/")
   }
 
@@ -248,7 +267,7 @@ export default function ChatPage() {
           <div className="bg-gray-800 dark:bg-gray-800 p-3 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-gray-400">Credits Remaining</span>
-              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/10}</Badge>
+              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/10</Badge>
             </div>
             <Progress value={credits * 10} className="h-2" />
             <div className="mt-2 text-xs text-gray-400 text-center">

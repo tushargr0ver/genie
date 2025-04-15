@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getSession } from 'next-auth/react';
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -18,6 +20,19 @@ export default function RewardsPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { theme } = useTheme()
+
+
+  useEffect(() => {
+      const checkSession = async () => {
+        const session = await getSession();
+        if (!session) {
+          router.push('/');
+        }
+        
+      };
+  
+      checkSession();
+    }, [router]);
 
   useEffect(() => {
     // Check if user came from a specific action
