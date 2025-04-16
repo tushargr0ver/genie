@@ -1,12 +1,27 @@
 import { openai } from "@ai-sdk/openai"
 import { streamText } from "ai"
+import { neon } from '@neondatabase/serverless';
+import { auth } from "@/auth"
 
+const sql = neon(process.env.DATABASE_URL!);
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
 
 // Update the API route to handle both reasoning and search modes
 export async function POST(req: Request) {
+  const session = await auth()
+  if(!session) return null
+
+  const email = session.user?.email
+  
+  
   const { messages, model = "gpt-4o", isReasoningMode = false, isSearchMode = false } = await req.json()
+
+  await sql`
+  UPDATE conversations
+  SET messages = ${JSON.stringify(messages)}::jsonb
+  WHERE email = ${email}
+`;
 
   // Configure the model based on the selected provider
   let aiModel

@@ -67,6 +67,7 @@ const AI_MODELS = [
 export default function ChatPage() {
   const router = useRouter()
 
+  
 
   useEffect(() => {
     const checkSession = async () => {
@@ -97,7 +98,7 @@ export default function ChatPage() {
   const [credits, setCredits] = useState(10)
   const [showLimitDialog, setShowLimitDialog] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
-
+  
   // Initialize chat with AI SDK
   const { messages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
@@ -216,6 +217,25 @@ export default function ChatPage() {
     setCredits((prev) => prev + 5)
     setShowLimitDialog(false)
   }
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const res = await fetch(`/api/message`);
+      const data = await res.json();
+  
+      if (Array.isArray(data)) {
+        // Add old messages in correct order
+        // This will append each message individually
+        for (const msg of data.reverse()) {
+          append({ role: msg.role, content: msg.content });
+        }
+      }
+    };
+  
+    fetchMessages();
+  }, []);  // Empty dependency array to only run once when the component mounts
+  
+  
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
