@@ -17,11 +17,13 @@ export async function POST(req: Request) {
   
   const { messages, model = "gpt-4o", isReasoningMode = false, isSearchMode = false } = await req.json()
 
-  await sql`
-  UPDATE conversations
-  SET messages = ${JSON.stringify(messages)}::jsonb
-  WHERE email = ${email}
-`;
+
+
+  // await sql`
+  // UPDATE conversations
+  // SET messages = ${JSON.stringify(messages)}::jsonb
+  // WHERE email = ${email}`
+;
 
   // Configure the model based on the selected provider
   let aiModel

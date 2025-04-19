@@ -100,7 +100,7 @@ export default function ChatPage() {
   const [isUploading, setIsUploading] = useState(false)
   
   // Initialize chat with AI SDK
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
+  const { messages,setMessages, input, handleInputChange, handleSubmit, isLoading, append, stop } = useChat({
     api: "/api/chat",
     body: {
       model: selectedModel,
@@ -117,6 +117,8 @@ export default function ChatPage() {
       if (credits === 1) {
         setShowLimitDialog(true)
       }
+
+       // ✅ pass messages array only
     },
   })
 
@@ -219,23 +221,66 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+    
     const fetchMessages = async () => {
-      const res = await fetch(`/api/message`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`/api/message`);
+        const data = await res.json();
+
+        console.log(data);
+        
   
-      if (Array.isArray(data)) {
-        // Add old messages in correct order
-        // This will append each message individually
-        for (const msg of data.reverse()) {
-          append({ role: msg.role, content: msg.content });
+        if (Array.isArray(data)) {
+          const formatted = data.map((msg: any, i: number) => ({
+            id: msg._id || `msg-${i}`,
+            role: msg.role,
+            content: msg.content,
+          }));
+          setMessages(formatted);
         }
+      } catch (err) {
+        console.error("Failed to load messages:", err);
       }
     };
   
     fetchMessages();
-  }, []);  // Empty dependency array to only run once when the component mounts
+  }, []);
+     // Empty dependency array to only run once when the component mounts
   
+     const firstRun = useRef(true);
+useEffect(() => {
+
+  if (firstRun.current) {
+    firstRun.current = false;
+    return; // Skip on initial render
+  }
+
+  if (!messages || messages.length === 0) {
+    return; // Skip if messages is empty
+  }
+  const saveMessagesToDB = async (rawMessages: any[]) => {
+    const cleanedMessages = rawMessages.map(({ id, ...rest }) => rest);
   
+    try {
+      const res = await fetch("/api/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: cleanedMessages }),
+      });
+  
+      if (!res.ok) throw new Error("Failed to save messages");
+      console.log("Messages saved!");
+    } catch (err) {
+      console.error("Error saving messages:", err);
+    }
+  };
+  
+
+  saveMessagesToDB(messages);
+}, [messages])
+
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -260,7 +305,7 @@ export default function ChatPage() {
         </div>
 
         <div className="p-4">
-          <Button
+          <Button disabled
             onClick={createNewConversation}
             className="w-full bg-purple-600 hover:bg-purple-700 flex items-center justify-center"
           >
