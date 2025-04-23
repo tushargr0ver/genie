@@ -12,7 +12,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 
 export default function RewardsPage() {
-  const [credits, setCredits] = useState(10)
+  const [credits, setCredits] = useState(31)
   const [githubFollowed, setGithubFollowed] = useState(false)
   const [linkedinFollowed, setLinkedinFollowed] = useState(false)
   const [twitterFollowed, setTwitterFollowed] = useState(false)
@@ -34,11 +34,59 @@ export default function RewardsPage() {
       checkSession();
     }, [router]);
 
+
+    useEffect(()=>{
+        //setCredits from db once
+        (async () => {
+          try {
+            const res = await fetch(`/api/reward`);
+            const data = await res.json();
+            if (res.ok) {
+              if (data.credits !== undefined) {
+                setCredits(data.credits);
+                setLinkedinFollowed(data.linkedin)
+                setGithubFollowed(data.github)
+                setTwitterFollowed(data.x)
+                setShared(data.share)
+              } else {
+                console.error('Credits not found in response');
+              }
+            } else {
+              console.error('Error:', data.error);
+            }
+          } catch (err) {
+            console.error('Fetch failed:', err);
+          }
+        })();
+        
+        },[])
+
+        useEffect(()=>{
+            if(credits<31){
+              (async () => {
+                try{
+                  const response = await fetch('/api/add-credits', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ credits, githubFollowed, twitterFollowed, linkedinFollowed, shared }),
+                });
+                console.log({ credits, githubFollowed, twitterFollowed, linkedinFollowed, shared });
+                
+              }catch(err){
+                console.error("Post failed");
+                
+              }
+              })()
+            }
+            
+          },[credits,githubFollowed, linkedinFollowed, twitterFollowed, shared])
   useEffect(() => {
     // Check if user came from a specific action
     const action = searchParams.get("action")
     if (action === "github" && !githubFollowed) {
-      setGithubFollowed(true)
+      setGithubFollowed(true)      
       setCredits((prev) => prev + 5)
     } else if (action === "linkedin" && !linkedinFollowed) {
       setLinkedinFollowed(true)
@@ -48,20 +96,20 @@ export default function RewardsPage() {
       setCredits((prev) => prev + 5)
     } else if (action === "share" && !shared) {
       setShared(true)
-      setCredits((prev) => prev + 3)
+      setCredits((prev) => prev + 5)
     }
   }, [searchParams, githubFollowed, linkedinFollowed, twitterFollowed, shared])
 
   const handleGithubFollow = () => {
-    window.open("https://github.com/yourusername", "_blank")
+    window.open("https://github.com/tushargr0ver/genie", "_blank")
     if (!githubFollowed) {
-      setGithubFollowed(true)
+      setGithubFollowed(true)      
       setCredits((prev) => prev + 5)
     }
   }
 
   const handleLinkedinFollow = () => {
-    window.open("https://linkedin.com/in/yourprofile", "_blank")
+    window.open("https://linkedin.com/in/tushargr0ver", "_blank")
     if (!linkedinFollowed) {
       setLinkedinFollowed(true)
       setCredits((prev) => prev + 5)
@@ -69,7 +117,7 @@ export default function RewardsPage() {
   }
 
   const handleTwitterFollow = () => {
-    window.open("https://twitter.com/yourhandle", "_blank")
+    window.open("https://x.com/tushargr0ver", "_blank")
     if (!twitterFollowed) {
       setTwitterFollowed(true)
       setCredits((prev) => prev + 5)
@@ -88,7 +136,7 @@ export default function RewardsPage() {
 
     if (!shared) {
       setShared(true)
-      setCredits((prev) => prev + 3)
+      setCredits((prev) => prev + 5)
     }
   }
 
@@ -223,7 +271,7 @@ export default function RewardsPage() {
           <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardHeader className="pb-2">
               <CardTitle className="text-base dark:text-white">Share with Friends</CardTitle>
-              <CardDescription className="dark:text-gray-400">Get 3 credits</CardDescription>
+              <CardDescription className="dark:text-gray-400">Get 5 credits</CardDescription>
             </CardHeader>
             <CardContent className="pb-2">
               <p className="text-sm text-gray-600 dark:text-gray-400">

@@ -46,6 +46,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 
+
 // Define the available AI models
 const AI_MODELS = [
   { id: "gpt-4o", name: "OpenAI GPT-4o", provider: "OpenAI" },
@@ -121,6 +122,53 @@ export default function ChatPage() {
        // ✅ pass messages array only
     },
   })
+
+  useEffect(()=>{
+    //setCredits from db once
+    (async () => {
+      try {
+        const res = await fetch(`/api/reward`);
+        const data = await res.json();
+        if (res.ok) {
+          if (data.credits !== undefined) {
+            setCredits(data.credits);
+          } else {
+            console.error('Credits not found in response');
+          }
+        } else {
+          console.error('Error:', data.error);
+        }
+      } catch (err) {
+        console.error('Fetch failed:', err);
+      }
+    })();
+    
+    },[])
+
+  useEffect(()=>{
+
+    if (firstRun.current) {
+      firstRun.current = false;
+      return; // Skip on initial render
+    }
+    if(credits<10){
+      (async () => {
+        try{
+          const response = await fetch('/api/reward', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ credits }),
+        });
+      }catch(err){
+        console.error("Post failed");
+        
+      }
+      })()
+    }
+    
+  },[credits])
 
   // Scroll to bottom of messages
   useEffect(() => {
@@ -216,7 +264,7 @@ export default function ChatPage() {
 
   // Boost credits
   const boostCredits = () => {
-    setCredits((prev) => prev + 5)
+    // setCredits((prev) => prev + 5)
     setShowLimitDialog(false)
   }
 
