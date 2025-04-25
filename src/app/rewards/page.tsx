@@ -36,7 +36,7 @@ export default function RewardsPage() {
 
 
     useEffect(()=>{
-        //setCredits from db once
+
         (async () => {
           try {
             const res = await fetch(`/api/reward`);
@@ -64,7 +64,9 @@ export default function RewardsPage() {
         useEffect(()=>{
             if(credits<31){
               (async () => {
+
                 try{
+
                   const response = await fetch('/api/add-credits', {
                   method: 'POST',
                   headers: {
@@ -72,7 +74,7 @@ export default function RewardsPage() {
                   },
                   body: JSON.stringify({ credits, githubFollowed, twitterFollowed, linkedinFollowed, shared }),
                 });
-                console.log({ credits, githubFollowed, twitterFollowed, linkedinFollowed, shared });
+               
                 
               }catch(err){
                 console.error("Post failed");
@@ -81,7 +83,7 @@ export default function RewardsPage() {
               })()
             }
             
-          },[credits,githubFollowed, linkedinFollowed, twitterFollowed, shared])
+          },[githubFollowed, linkedinFollowed, twitterFollowed, shared])
   useEffect(() => {
     // Check if user came from a specific action
     const action = searchParams.get("action")
