@@ -13,8 +13,10 @@ export const maxDuration = 30
 // Update the API route to handle both reasoning and search modes
 export async function POST(req: Request) {
   const session = await auth()
-  if(!session) return null
-
+  if (!session) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+  
   const email = session.user?.email
   
   
@@ -64,10 +66,9 @@ let systemPrompt = "You are Genie, a helpful AI assistant. Please respond with p
   } 
 
   else {
-    
-    return
-    
+    return new Response('Invalid model', { status: 400 });
   }
+  
 
   const result = streamText({
     model: aiModel,
