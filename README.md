@@ -88,7 +88,7 @@ cd genie
 ```bash
 npm install
 ```
-> (or use `npm install` / `yarn install`)
+> (or use `pnpm install` / `yarn install`)
 
 ### 4. Set up environment variables
 
