@@ -171,4 +171,3 @@ Made with ❤️ by [**Tushar Grover**](https://github.com/tushargr0ver)
 ---
 
 # 🚀 [Launch Genie → trygenie.xyz](https://trygenie.xyz)
-```
