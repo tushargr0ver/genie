@@ -268,7 +268,6 @@ export default function LandingPage() {
                   "Optimized for touch interfaces and mobile screens",
                   "Lightning-fast performance even on slower connections",
                   "Dark mode for comfortable night-time usage",
-                  "Offline capabilities for uninterrupted conversations",
                   "Syncs seamlessly across all your devices",
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start">

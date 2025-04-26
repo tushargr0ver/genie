@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧞 Genie
 
-## Getting Started
+> Your **Unified AI Assistant** for smarter conversations with multiple AI models.
 
-First, run the development server:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
+[![Vercel Deploy](https://img.shields.io/badge/Deployed%20on-Vercel-000?logo=vercel)](https://trygenie.xyz)  
+[![Last Commit](https://img.shields.io/github/last-commit/tushargr0ver/genie?style=flat-square)](https://github.com/tushargr0ver/genie/commits/main)
+
+---
+
+## ✨ Overview
+
+**Genie** is a **powerful, open-source AI assistant chatbot** that connects you with **multiple LLMs** (Large Language Models) — all in one place.  
+Built with **Next.js 14**, **NeonDB**, **TypeScript**, and **Vercel AI SDK**, it delivers a **mobile-responsive**, **dark mode**-friendly, **unified AI interface** that scales.
+
+🔗 **Live Demo**: [trygenie.xyz](https://trygenie.xyz)
+
+---
+
+## 🔥 Features
+
+- 🔥 **Unified AI Interface**: Access **OpenRouter**, **OpenAI**, and **Gemini** APIs seamlessly.
+- 📱 **Mobile Responsive**: Fully optimized for phones, tablets, and desktops.
+- 🌑 **Dark Mode**: Smooth, native dark mode UI.
+- ⚡ **Advanced Reasoning**: Intelligent, deep conversation flows.
+- 🔎 **Real-Time Search**: Find conversations instantly.
+- 🔐 **Secure OAuth**: Sign in with **Google** or **GitHub** (via **NextAuth**).
+- 🎯 **Credit-Based System**: 10 Free Credits + Earn More Through Rewards.
+- 🛡️ **MIT Licensed**: Use, modify, and distribute freely.
+- 💻 **Markdown Rendering**: Support for different programming languages and styling in chat.
+- 🧠 **Improved Prompting**: Fine-tuning the prompt system for enhanced performance and user experience.
+
+---
+
+## 🧠 Available AI Models
+
+- GPT 3.5 Turbo
+- GPT 4o Mini
+- GPT 4.1 Nano
+- GPT 4.1 Mini
+- o1 Mini
+- o3 Mini
+- o4 Mini
+- Gemini 2.5 Pro
+- Gemini 2.0 Flash / Flash Lite
+- Gemini 1.5 Flash / Flash 8B
+- Gemini 1.5 Pro
+- Meta Llama 4 Scout
+- Meta Llama 4 Maverick
+- Meta Llama 3.3 70B Instruct
+- Qwen2.5 Coder 32B Instruct
+- DeepSeek V3
+
+_(More models added regularly!)_
+
+---
+
+## ⚙️ Tech Stack
+
+- **Framework**: [Next.js 14](https://nextjs.org/)
+- **Database**: [NeonDB](https://neon.tech/)
+- **Authentication**: [NextAuth (Auth.js)](https://authjs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.dev/)
+- **Language**: TypeScript
+- **AI SDK**: [Vercel AI SDK](https://vercel.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+---
+
+## 🚀 Installation & Local Setup
+
+Follow these simple steps to run **Genie** locally:
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/tushargr0ver/genie.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Move into the project folder
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd genie
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Install dependencies
 
-## Learn More
+```bash
+pnpm install
+```
+> (or use `npm install` / `yarn install`)
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Set up environment variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env.local` file:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+touch .env.local
+```
 
-## Deploy on Vercel
+Add the following:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+AUTH_SECRET=your_auth_secret
+AUTH_GOOGLE_ID=your_google_oauth_id
+AUTH_GOOGLE_SECRET=your_google_oauth_secret
+DATABASE_URL=your_database_connection_url
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_GENERATIVE_AI_API_KEY=your_google_genai_api_key
+AUTH_GITHUB_ID=your_github_oauth_id
+AUTH_GITHUB_SECRET=your_github_oauth_secret
+OPENROUTER_API_KEY=your_openrouter_api_key
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 5. Run the development server
+
+```bash
+pnpm dev
+```
+
+Go to [http://localhost:3000](http://localhost:3000) 🚀
+
+---
+
+## 🎯 Credit System
+
+- **1 Credit** = **1 Message** to any LLM.
+- **Free Bonus**: 10 Credits on Signup.
+- **Earn More**: Complete small tasks like:
+  - ⭐ Follow on GitHub
+  - 🤝 Connect on LinkedIn
+  - 🐦 Follow on X (Twitter)
+  - 📢 Share Genie with friends
+- _(Each task gives +5 credits — one-time per user.)_
+
+---
+
+## 🛣️ Roadmap
+
+- 💳 Add payments to buy credits.
+- 🗂️ Create multiple "New Chats."
+- 📸 Improve multimedia (images, documents, etc).
+- 🧠 Smarter search and better reasoning.
+- 🚀 Add even more AI models.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! 🚀
+
+- Fork the repository.
+- Create a new branch (`git checkout -b feature/yourFeature`).
+- Commit your changes (`git commit -m 'Add your feature'`).
+- Push to the branch (`git push origin feature/yourFeature`).
+- Open a **Pull Request**.
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).  
+**Genie is fully open-source. Build with it, fork it, improve it. 🌟**
+
+---
+
+## 🙌 Connect with the Creator
+
+Made with ❤️ by [**Tushar Grover**](https://github.com/tushargr0ver)
+
+---
+
+# 🚀 [Launch Genie → trygenie.xyz](https://trygenie.xyz)
+```
