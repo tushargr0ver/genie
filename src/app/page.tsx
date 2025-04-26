@@ -102,34 +102,20 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="#features">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 px-6 py-5 text-base sm:text-lg w-full sm:w-auto"
-              >
-                Explore Features
-              </Button>
+            <Button
+  size="lg"
+  variant="outline"
+  className="border-white text-white bg-white/10 hover:bg-white/20 px-6 py-5 text-base sm:text-lg w-full sm:w-auto"
+>
+  Explore Features
+</Button>
             </Link>
           </div>
           <div className="text-sm text-white/70">No credit card required • Free tier available</div>
         </div>
       </header>
 
-      {/* Trusted By Section */}
-      <section className="py-8 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-6">
-            TRUSTED BY INNOVATIVE TEAMS WORLDWIDE
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 opacity-70">
-            {["Acme Inc", "TechCorp", "Innovate AI", "FutureLabs", "DataSphere"].map((company, i) => (
-              <div key={i} className="text-gray-400 dark:text-gray-500 font-semibold text-lg">
-                {company}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Models Section */}
       <section className="py-12 sm:py-20 bg-white dark:bg-gray-950" id="models">
@@ -149,18 +135,25 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { name: "GPT-4o", provider: "OpenAI", new: true },
-              { name: "GPT-4o Mini", provider: "OpenAI", new: true },
-              { name: "o3-mini", provider: "OpenAI", new: true },
-              { name: "GPT-4.5", provider: "OpenAI", new: true },
-              { name: "Gemini 2.0 Flash", provider: "Google", new: false },
+              { name: "o3 Mini", provider: "OpenAI", new: true },
+              { name: "GPT 3.5 Turbo", provider: "OpenAI", new: false },
+              { name: "GPT 4o Mini", provider: "OpenAI", new: true },
+              { name: "o1 Mini", provider: "OpenAI", new: true },
+              { name: "o4 Mini", provider: "OpenAI", new: true },
+              { name: "GPT 4.1 Nano", provider: "OpenAI", new: true },
+              { name: "GPT 4.1 Mini", provider: "OpenAI", new: true },
               { name: "Gemini 2.5 Pro", provider: "Google", new: true },
-              { name: "DeepSeek V3", provider: "DeepSeek", new: false },
-              { name: "Llama 3.3 70B", provider: "Meta", new: false },
-              { name: "Llama 4 Scout", provider: "Meta", new: true },
-              { name: "Llama 4 Maverick", provider: "Meta", new: true },
-              { name: "Qwen 2.5 32B", provider: "Alibaba", new: false },
-              { name: "Qwen QWQ 32B", provider: "Alibaba", new: true },
+              { name: "Gemini 2.0 Flash", provider: "Google", new: true },
+              { name: "Gemini 2.0 Flash lite", provider: "Google", new: false },
+              { name: "Gemini 1.5 Flash", provider: "Google", new: false },
+              { name: "Gemini 1.5 Flash 8b", provider: "Google", new: false },
+              { name: "Gemini 1.5 Pro", provider: "Google", new: false },
+              { name: "Meta: Llama 4 Scout", provider: "OpenRouter", new: true },
+              { name: "Meta: Llama 4 Maverick", provider: "OpenRouter", new: true },
+              { name: "Meta: Llama 3.3 70B Instruct", provider: "OpenRouter", new: true },
+              { name: "Qwen2.5 Coder 32B Instruct", provider: "OpenRouter", new: true },
+              { name: "DeepSeek V3", provider: "OpenRouter", new: true },
+
             ].map((model, index) => (
               <div key={index} className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-4 rounded-xl relative">
                 {model.new && (
@@ -348,177 +341,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-12 sm:py-20 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <Badge className="mb-2 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-              <Sparkles className="h-3.5 w-3.5 mr-1" />
-              Testimonials
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 dark:text-white">
-              Loved by Professionals Worldwide
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              See what our users are saying about how Genie has transformed their workflow.
-            </p>
-          </div>
+     
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote:
-                  "Genie has completely transformed how I research and write content. The ability to switch between reasoning and search modes is a game-changer.",
-                author: "Sarah J.",
-                role: "Content Strategist",
-                company: "CreativeHub",
-              },
-              {
-                quote:
-                  "As a developer, I need accurate technical information fast. Genie's multi-model approach means I always get the best answer, not just one model's perspective.",
-                author: "Michael T.",
-                role: "Senior Developer",
-                company: "TechInnovate",
-              },
-              {
-                quote:
-                  "The mobile experience is flawless. I can chat with advanced AI models on the go, and the dark mode is perfect for late-night brainstorming sessions.",
-                author: "Elena R.",
-                role: "UX Designer",
-                company: "DesignForward",
-              },
-            ].map((testimonial, i) => (
-              <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-                <div className="mb-4 text-yellow-500 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 italic">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-medium dark:text-white">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {testimonial.role}, {testimonial.company}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-12 sm:py-20 bg-white dark:bg-gray-950">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <Badge className="mb-2 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-              <Layers className="h-3.5 w-3.5 mr-1" />
-              Pricing
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 dark:text-white">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Choose the plan that works best for you, from free to enterprise.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                name: "Free",
-                price: "$0",
-                description: "Perfect for trying out Genie",
-                features: [
-                  "Access to basic models",
-                  "10 messages per day",
-                  "Mobile app access",
-                  "Standard response time",
-                ],
-                cta: "Get Started",
-                popular: false,
-              },
-              {
-                name: "Pro",
-                price: "$19",
-                period: "/month",
-                description: "For professionals and power users",
-                features: [
-                  "Access to all AI models",
-                  "Unlimited messages",
-                  "Priority response time",
-                  "Advanced reasoning & search",
-                  "Multi-modal uploads",
-                  "Dark mode",
-                ],
-                cta: "Upgrade to Pro",
-                popular: true,
-              },
-              {
-                name: "Enterprise",
-                price: "Custom",
-                description: "For teams and organizations",
-                features: [
-                  "Custom AI model integration",
-                  "Team collaboration features",
-                  "Admin dashboard",
-                  "API access",
-                  "Dedicated support",
-                  "Custom branding",
-                ],
-                cta: "Contact Sales",
-                popular: false,
-              },
-            ].map((plan, i) => (
-              <div
-                key={i}
-                className={`
-                  bg-white dark:bg-gray-800 rounded-xl overflow-hidden border 
-                  ${
-                    plan.popular
-                      ? "border-purple-500 dark:border-purple-400 shadow-lg relative"
-                      : "border-gray-200 dark:border-gray-700"
-                  }
-                `}
-              >
-                {plan.popular && (
-                  <div className="bg-purple-500 text-white text-xs font-medium py-1 text-center">MOST POPULAR</div>
-                )}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 dark:text-white">{plan.name}</h3>
-                  <div className="mb-4">
-                    <span className="text-3xl font-bold dark:text-white">{plan.price}</span>
-                    {plan.period && <span className="text-gray-500 dark:text-gray-400">{plan.period}</span>}
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">{plan.description}</p>
-                  <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, j) => (
-                      <li key={j} className="flex items-start">
-                        <svg
-                          className="h-5 w-5 text-green-500 mr-2 mt-0.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="dark:text-gray-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className={`w-full ${plan.popular ? "bg-purple-600 hover:bg-purple-700" : "bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600"}`}
-                  >
-                    {plan.cta}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* CTA Section */}
       <section className="py-12 sm:py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
@@ -544,155 +369,41 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="/contact">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 px-6 py-5 text-base sm:text-lg w-full sm:w-auto"
-              >
-                Contact Sales
-              </Button>
+            <Button
+  size="lg"
+  variant="outline"
+  className="border-white text-white bg-white/10 hover:bg-white/20 px-6 py-5 text-base sm:text-lg w-full sm:w-auto"
+>
+  Contact Sales
+</Button>
+
             </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Zap className="h-6 w-6" />
-                <span className="text-xl font-bold">Genie</span>
-              </div>
-              <p className="text-gray-400 text-sm mb-4">
-                Harness the power of AI with our intuitive, mobile-first platform that connects you to the world's most
-                advanced AI models.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      fillRule="evenodd"
-                      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      fillRule="evenodd"
-                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
+      <footer className="bg-gray-900 text-white py-4 sm:py-6">
+  <div className="container mx-auto px-4">
+    <div className="border-gray-800 pt-4 flex flex-col md:flex-row justify-between items-center">
+      <div className="text-gray-400 text-sm mb-4 md:mb-0">
+        © {new Date().getFullYear()} Genie AI. All rights reserved.
+      </div>
+      <div className="flex space-x-6">
+        <Link href="/privacy" className="text-gray-400 hover:text-white text-sm">
+          Privacy
+        </Link>
+        <Link href="/terms" className="text-gray-400 hover:text-white text-sm">
+          Terms
+        </Link>
+        <Link href="/contact" className="text-gray-400 hover:text-white text-sm">
+          Contact
+        </Link>
+      </div>
+    </div>
+  </div>
+</footer>
 
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Product</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="#features" className="text-gray-400 hover:text-white">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#models" className="text-gray-400 hover:text-white">
-                    AI Models
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Roadmap
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-gray-400 hover:text-white">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Careers
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/privacy" className="text-gray-400 hover:text-white">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" className="text-gray-400 hover:text-white">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Cookie Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-gray-400 hover:text-white">
-                    Data Processing
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} Genie AI. All rights reserved.
-            </div>
-            <div className="flex space-x-6">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm">
-                Privacy
-              </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm">
-                Terms
-              </Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white text-sm">
-                Contact
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

@@ -175,7 +175,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex justify-center space-x-4">
                     <a
-                      href="https://github.com/yourusername"
+                      href="https://github.com/tushargr0ver"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
@@ -183,7 +183,7 @@ export default function ContactPage() {
                       <Github className="h-5 w-5" />
                     </a>
                     <a
-                      href="https://linkedin.com/in/yourprofile"
+                      href="https://linkedin.com/in/tushargr0ver"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
@@ -191,7 +191,7 @@ export default function ContactPage() {
                       <Linkedin className="h-5 w-5" />
                     </a>
                     <a
-                      href="https://twitter.com/yourhandle"
+                      href="https://x.com/tushargr0ver"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
@@ -199,7 +199,7 @@ export default function ContactPage() {
                       <Twitter className="h-5 w-5" />
                     </a>
                     <a
-                      href="mailto:your.email@example.com"
+                      href="mailto:your.tushar.grover2004@gmail.com"
                       className="text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
                     >
                       <Mail className="h-5 w-5" />
