@@ -1,5 +1,8 @@
 import { openai } from "@ai-sdk/openai"
+import { google } from "@ai-sdk/google"
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { streamText } from "ai"
+
 import { neon } from '@neondatabase/serverless';
 import { auth } from "@/auth"
 
@@ -15,20 +18,16 @@ export async function POST(req: Request) {
   const email = session.user?.email
   
   
-  const { messages, model = "gpt-4o", isReasoningMode = false, isSearchMode = false } = await req.json()
+  // const { messages, model = "gpt-4o", isReasoningMode = false, isSearchMode = false } = await req.json()
 
+  const { messages, model, isReasoningMode, isSearchMode } = await req.json()
+  
 
-
-  // await sql`
-  // UPDATE conversations
-  // SET messages = ${JSON.stringify(messages)}::jsonb
-  // WHERE email = ${email}`
 ;
 
   // Configure the model based on the selected provider
   let aiModel
-  let systemPrompt = "You are Genie, a helpful AI assistant."
-
+let systemPrompt = "You are Genie, a helpful AI assistant. Please respond with plain text only. Do not use any formatting like Markdown, HTML, or similar markup."
   // Add mode context to system prompt
   if (isReasoningMode && isSearchMode) {
     systemPrompt +=
@@ -44,22 +43,30 @@ export async function POST(req: Request) {
   }
 
   // Select the appropriate model based on the provider
-  if (model.startsWith("gemini")) {
-    // This would use the Google provider in a real implementation
-    // For now, we'll use OpenAI as a fallback
-    aiModel = openai("gpt-4o")
-  } else if (model.startsWith("llama")) {
-    // This would use a Llama provider in a real implementation
-    aiModel = openai("gpt-4o")
-  } else if (model.startsWith("deepseek")) {
-    // This would use the DeepSeek provider in a real implementation
-    aiModel = openai("gpt-4o")
-  } else if (model.startsWith("qwen")) {
-    // This would use the Qwen provider in a real implementation
-    aiModel = openai("gpt-4o")
-  } else {
-    // Default to OpenAI
+  if (model.startsWith("o") || model.startsWith("gpt")) {
+   
     aiModel = openai(model)
+    
+  } 
+  else if (model.startsWith("gemini")) {
+   
+    aiModel = google(model)
+    
+  } 
+  else if (model.startsWith("deepseek") || model.startsWith("qwen") || model.startsWith("meta")) {
+   
+    const openrouter = createOpenRouter({
+      apiKey: process.env.OPENROUTER_API_KEY!, // Make sure you have this in your environment
+    });
+  
+    aiModel = openrouter(model);
+
+  } 
+
+  else {
+    
+    return
+    
   }
 
   const result = streamText({

@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+
 import { getSession } from 'next-auth/react';
 import { signOut } from "next-auth/react" // ✅ Use next-auth signIn
 
@@ -49,20 +50,26 @@ import { useTheme } from "next-themes"
 
 // Define the available AI models
 const AI_MODELS = [
-  { id: "gpt-4o", name: "OpenAI GPT-4o", provider: "OpenAI" },
-  { id: "gpt-4o-mini", name: "OpenAI GPT-4o Mini", provider: "OpenAI" },
-  { id: "o3-mini", name: "OpenAI o3-mini", provider: "OpenAI" },
-  { id: "gpt-4.5", name: "OpenAI GPT-4.5", provider: "OpenAI" },
-  { id: "gemini-2.0-flash", name: "Google Gemini 2.0 Flash", provider: "Google" },
-  { id: "gemini-2.0-flash-lite", name: "Google Gemini 2.0 Flash Lite", provider: "Google" },
-  { id: "gemini-2.5-pro", name: "Google Gemini 2.5 Pro", provider: "Google" },
-  { id: "deepseek-v3", name: "DeepSeek V3", provider: "DeepSeek" },
-  { id: "deepseek-r1", name: "DeepSeek R1", provider: "DeepSeek" },
-  { id: "llama-3.3-70b", name: "Llama 3.3 70B", provider: "Meta" },
-  { id: "llama-4-scout", name: "Llama 4 Scout", provider: "Meta" },
-  { id: "llama-4-maverick", name: "Llama 4 Maverick", provider: "Meta" },
-  { id: "qwen-2.5-32b", name: "Qwen 2.5 32B", provider: "Alibaba" },
-  { id: "qwen-qwq-32b", name: "Qwen QWQ 32B", provider: "Alibaba" },
+  { id: "o3-mini", name: "o3 Mini", provider: "OpenAI" },
+  { id: "gpt-3.5-turbo", name: "GPT 3.5 Turbo", provider: "OpenAI" },
+  { id: "gpt-4o-mini", name: "GPT 4o Mini", provider: "OpenAI" },
+  { id: "o1-mini", name: "o1 Mini", provider: "OpenAI" },
+  { id: "o4-mini", name: "o4 Mini", provider: "OpenAI" },
+  { id: "gpt-4.1-nano", name: "GPT 4.1 Nano", provider: "OpenAI" },
+  { id: "gpt-4.1-mini", name: "GPT 4.1 Mini", provider: "OpenAI" },
+  { id: "gemini-2.5-pro-exp-03-25", name: "Gemini 2.5 Pro", provider: "Google" },
+  { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash", provider: "Google" },
+  { id: "gemini-2.0-flash-lite-preview-02-05", name: "Gemini 2.0 Flash lite", provider: "Google" },
+  { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", provider: "Google" },
+  { id: "gemini-1.5-flash-8b-latest", name: "Gemini 1.5 Flash 8b", provider: "Google" },
+  { id: "gemini-1.5-pro-latest", name: "Gemini 1.5 Pro", provider: "Google" },
+  { id: "meta-llama/llama-4-scout:free", name: "Meta: Llama 4 Scout", provider: "OpenRouter" },
+  { id: "meta-llama/llama-4-maverick:free", name: "Meta: Llama 4 Maverick", provider: "OpenRouter" },
+  { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Meta: Llama 3.3 70B Instruct", provider: "OpenRouter" },
+  { id: "qwen/qwen-2.5-coder-32b-instruct:free", name: "Qwen2.5 Coder 32B Instruct", provider: "OpenRouter" },
+  { id: "deepseek/deepseek-chat:free", name: "DeepSeek V3", provider: "OpenRouter" },
+
+  
 ]
 
 export default function ChatPage() {
@@ -124,7 +131,6 @@ export default function ChatPage() {
   })
 
   useEffect(()=>{
-    //setCredits from db once
     (async () => {
       try {
         const res = await fetch(`/api/reward`);
@@ -273,10 +279,7 @@ export default function ChatPage() {
     const fetchMessages = async () => {
       try {
         const res = await fetch(`/api/message`);
-        const data = await res.json();
-
-        console.log(data);
-        
+        const data = await res.json();        
   
         if (Array.isArray(data)) {
           const formatted = data.map((msg: any, i: number) => ({
@@ -549,7 +552,10 @@ useEffect(() => {
                         }
                       `}
                       >
-                        <div className="whitespace-pre-wrap">{message.content}</div>
+                        
+                          <div className="whitespace-pre-wrap">
+                                {message.content}
+                                </div>
                       </div>
                       <div
                         className={`
