@@ -428,7 +428,7 @@ useEffect(() => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Credits remaining: {credits}/10</p>
+                  <p>Credits remaining: {credits}/30</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
