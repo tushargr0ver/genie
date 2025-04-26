@@ -103,7 +103,7 @@ export default function ChatPage() {
   // Replace the isSearchMode state with separate states for each mode
   const [isReasoningMode, setIsReasoningMode] = useState(false)
   const [isSearchMode, setIsSearchMode] = useState(false)
-  const [credits, setCredits] = useState(10)
+  const [credits, setCredits] = useState(31)
   const [showLimitDialog, setShowLimitDialog] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   
@@ -157,7 +157,7 @@ export default function ChatPage() {
       firstRun.current = false;
       return; // Skip on initial render
     }
-    if(credits<10){
+    if(credits<31){
       (async () => {
         try{
           const response = await fetch('/api/reward', {
@@ -383,7 +383,7 @@ useEffect(() => {
           <div className="bg-gray-800 dark:bg-gray-800 p-3 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-gray-400">Credits Remaining</span>
-              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/10</Badge>
+              <Badge variant={credits > 3 ? "default" : "destructive"}>{credits}/30</Badge>
             </div>
             <Progress value={credits * 10} className="h-2" />
             <div className="mt-2 text-xs text-gray-400 text-center">
