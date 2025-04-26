@@ -86,7 +86,7 @@ cd genie
 ### 3. Install dependencies
 
 ```bash
-pnpm install
+npm install
 ```
 > (or use `npm install` / `yarn install`)
 
@@ -115,7 +115,7 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 ### 5. Run the development server
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Go to [http://localhost:3000](http://localhost:3000) 🚀
